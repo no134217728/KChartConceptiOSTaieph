@@ -17,11 +17,20 @@ class YourChartUsingViewController: UIViewController {
     @IBOutlet weak var macdButton: UIButton!
 
     @IBAction func todaysClicked() {
-        
+        maButton.isHidden = true
+        bollButton.isHidden = true
+        arbrButton.isHidden = true
+        macdButton.isHidden = true
     }
     
     @IBAction func candlesClicked() {
+        chartViewController?.selectedKTechType = .None
+        chartViewController?.drawKLine()
         
+        maButton.isHidden = false
+        bollButton.isHidden = false
+        arbrButton.isHidden = false
+        macdButton.isHidden = false
     }
 
     @IBAction func maClicked() {
@@ -33,11 +42,13 @@ class YourChartUsingViewController: UIViewController {
     }
     
     @IBAction func arbrClicked() {
-        
+        chartViewController?.selectedTechType = .ARBR
+        chartViewController?.drawKLine()
     }
     
     @IBAction func macdClicked() {
-        
+        chartViewController?.selectedTechType = .MACD
+        chartViewController?.drawKLine()
     }
     
     var chartViewController: ChartViewController?
