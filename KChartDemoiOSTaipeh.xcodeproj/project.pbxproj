@@ -12,6 +12,9 @@
 		20F535F322826821005F796E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20F535F122826821005F796E /* Main.storyboard */; };
 		20F535F522826823005F796E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20F535F422826823005F796E /* Assets.xcassets */; };
 		20F535F822826823005F796E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 20F535F622826823005F796E /* LaunchScreen.storyboard */; };
+		20F5360222826892005F796E /* Candles.json in Resources */ = {isa = PBXBuildFile; fileRef = 20F535FF22826891005F796E /* Candles.json */; };
+		20F5360322826892005F796E /* PreviousCandles.json in Resources */ = {isa = PBXBuildFile; fileRef = 20F5360022826892005F796E /* PreviousCandles.json */; };
+		20F5360422826892005F796E /* STARCandlesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5360122826892005F796E /* STARCandlesModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +25,9 @@
 		20F535F422826823005F796E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		20F535F722826823005F796E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		20F535F922826823005F796E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		20F535FF22826891005F796E /* Candles.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Candles.json; sourceTree = "<group>"; };
+		20F5360022826892005F796E /* PreviousCandles.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = PreviousCandles.json; sourceTree = "<group>"; };
+		20F5360122826892005F796E /* STARCandlesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = STARCandlesModel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -54,6 +60,7 @@
 		20F535EC22826821005F796E /* KChartDemoiOSTaipeh */ = {
 			isa = PBXGroup;
 			children = (
+				20F53605228268AC005F796E /* MockData */,
 				20F535ED22826821005F796E /* AppDelegate.swift */,
 				20F535EF22826821005F796E /* ViewController.swift */,
 				20F535F122826821005F796E /* Main.storyboard */,
@@ -62,6 +69,16 @@
 				20F535F922826823005F796E /* Info.plist */,
 			);
 			path = KChartDemoiOSTaipeh;
+			sourceTree = "<group>";
+		};
+		20F53605228268AC005F796E /* MockData */ = {
+			isa = PBXGroup;
+			children = (
+				20F535FF22826891005F796E /* Candles.json */,
+				20F5360022826892005F796E /* PreviousCandles.json */,
+				20F5360122826892005F796E /* STARCandlesModel.swift */,
+			);
+			path = MockData;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -124,6 +141,8 @@
 			files = (
 				20F535F822826823005F796E /* LaunchScreen.storyboard in Resources */,
 				20F535F522826823005F796E /* Assets.xcassets in Resources */,
+				20F5360222826892005F796E /* Candles.json in Resources */,
+				20F5360322826892005F796E /* PreviousCandles.json in Resources */,
 				20F535F322826821005F796E /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -137,6 +156,7 @@
 			files = (
 				20F535F022826821005F796E /* ViewController.swift in Sources */,
 				20F535EE22826821005F796E /* AppDelegate.swift in Sources */,
+				20F5360422826892005F796E /* STARCandlesModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
