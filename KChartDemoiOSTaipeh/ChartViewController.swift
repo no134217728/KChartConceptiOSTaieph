@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  ChartViewController.swift
 //  KChartDemoiOSTaipeh
 //
 //  Created by Wei Jen Wang on 2019/5/8.
@@ -8,7 +8,6 @@
 
 import UIKit
 
-class YourMarketsListsViewController: UIViewController {
+class ChartViewController: UIViewController {
     
 }
-
