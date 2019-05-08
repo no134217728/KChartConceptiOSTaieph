@@ -36,11 +36,13 @@ class YourChartUsingViewController: UIViewController {
     }
 
     @IBAction func maClicked() {
-        
+        chartViewController?.selectedKTechType = .MA
+        chartViewController?.drawKLine()
     }
     
     @IBAction func bollClicked() {
-        
+        chartViewController?.selectedKTechType = .BOLL
+        chartViewController?.drawKLine()
     }
     
     @IBAction func arbrClicked() {

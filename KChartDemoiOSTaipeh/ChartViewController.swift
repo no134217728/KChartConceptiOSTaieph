@@ -355,14 +355,14 @@ class ChartViewController: UIViewController {
             drawACandle(high: high, low: low, open: open, close: close, sequence: i)
         }
         
-//        switch selectedKTechType {
-//        case .None:
-//            break
-//        case .MA:
-//            drawKTechUsingRight(values: MAValues)
-//        case .BOLL:
-//            drawKTechUsingRight(values: BOLLValues)
-//        }
+        switch selectedKTechType {
+        case .None:
+            break
+        case .MA:
+            drawKTechUsingRight(values: MAValues)
+        case .BOLL:
+            drawKTechUsingRight(values: BOLLValues)
+        }
     }
     
     private func drawACandle(high: Double, low: Double, open: Double, close: Double, sequence: Int) {
@@ -489,6 +489,49 @@ class ChartViewController: UIViewController {
         avgLayer.strokeColor = UIColor.yellow.cgColor
         avgLayer.fillColor = UIColor.clear.cgColor
         chartUsingRightView.layer.addSublayer(avgLayer)
+    }
+    
+    private func drawKTechUsingRight(values: [String: [Double]]) {
+        let keys = values.keys
+        
+        for key in keys {
+            let techLine = UIBezierPath()
+            let techLineLayer = CAShapeLayer()
+            var strokeColor: CGColor { // TODO: 暫時隨便設定
+                switch key {
+                case "MA5":
+                    return UIColor.yellow.cgColor
+                case "MA10":
+                    return UIColor.blue.cgColor
+                case "MA30":
+                    return UIColor.green.cgColor
+                case "UP":
+                    return UIColor.red.cgColor
+                case "MB":
+                    return UIColor.blue.cgColor
+                case "DN":
+                    return UIColor.green.cgColor
+                default:
+                    return UIColor.lightGray.cgColor
+                }
+            }
+            
+            if let selected = values[key], selected.count > 0 {
+                let firstValue = convertPosition(system: .Right, value: selected[0])
+                techLine.move(to: CGPoint(x: CGFloat(candleWidth / 2), y: firstValue))
+                for i in max(1, startCandle)...min(candles.count - 1, startCandle + visibleCount) {
+                    let x = CGFloat(Double(i) * candleWidth) + CGFloat(candleWidth / 2)
+                    let theValue = convertPosition(system: .Right, value: selected[i])
+                    techLine.addLine(to: CGPoint(x: x, y: theValue))
+                }
+                
+                techLineLayer.path = techLine.cgPath
+                techLineLayer.lineWidth = 1
+                techLineLayer.strokeColor = strokeColor
+                techLineLayer.fillColor = UIColor.clear.cgColor
+                chartUsingRightView.layer.addSublayer(techLineLayer)
+            }
+        }
     }
     
     // MARK: 下半部技術圖
