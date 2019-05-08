@@ -46,7 +46,12 @@ class ChartViewController: UIViewController {
     let chartManager = ChartManager()
     var isMountain: Bool = false
     
-    var candleWidth: Double = 5
+    var candleWidth: Double = 5 {
+        didSet {
+            visibleCount = Int(gridView.frame.width / CGFloat(candleWidth))
+            drawKLine(contentOffsetXType: .Current)
+        }
+    }
     var candles: [CandleItems] = [] {
         didSet {
             DispatchQueue.global(qos: .userInteractive).async {
@@ -136,6 +141,11 @@ class ChartViewController: UIViewController {
     var KDValues: [String: [Double]] = [:]
     var KDJValues: [String: [Double]] = [:]
     var RSIValues: [String: [Double]] = [:]
+    
+    @IBAction func pinchAction(_ sender: UIPinchGestureRecognizer) {
+        let offset: Double = (sender.scale > 1) ? 0.5 : -0.5
+        candleWidth = max(2, min(30, candleWidth + offset))
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()

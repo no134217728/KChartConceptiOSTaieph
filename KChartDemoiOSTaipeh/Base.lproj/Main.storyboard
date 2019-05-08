@@ -442,7 +442,11 @@
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mzz-Qm-2lM" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <pinchGestureRecognizer id="9Zg-d1-zqu"/>
+                <pinchGestureRecognizer id="9Zg-d1-zqu">
+                    <connections>
+                        <action selector="pinchAction:" destination="cPC-BV-Doc" id="F3x-Ha-AoT"/>
+                    </connections>
+                </pinchGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3019" y="782"/>
         </scene>
