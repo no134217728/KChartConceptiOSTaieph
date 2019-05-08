@@ -42,6 +42,7 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var constraintTechBottomHeight: NSLayoutConstraint!
     
     let chartManager = ChartManager()
+    var isMountain: Bool = false
     
     var candleWidth: Double = 5
     var candles: [CandleItems] = [] {
@@ -155,6 +156,8 @@ class ChartViewController: UIViewController {
     
     // MARK: 繪圖呼叫
     func drawKLine(contentOffsetXType: ContentOffsetType = .ToLast) {
+        isMountain = false
+        
         chartsScrollView.isScrollEnabled = true
         
         constraintChartUsingRightWidth.constant = CGFloat(Double(candles.count) * candleWidth)
@@ -201,6 +204,25 @@ class ChartViewController: UIViewController {
         }
     }
     
+    func drawMountain() {
+        isMountain = true
+        
+        chartsScrollView.setContentOffset(.zero, animated: false)
+        chartsScrollView.isScrollEnabled = false
+        
+        constraintChartUsingRightWidth.constant = 0
+        constraintTechUsingRightWidth.constant = constraintChartUsingRightWidth.constant
+        constraintTechViewHeight.constant = 0
+        view.layoutIfNeeded()
+        
+        drawBasicGridAndSetupBasicRightBottomLabels(horLines: 3, verLines: 2)
+        
+        findRightMaxMinForMountain()
+        updateTheBottomLabelsForMountainChart()
+        drawTheMountain()
+    }
+    
+    // MARK: 上半部主要線圖
     private func drawBasicGridAndSetupBasicRightBottomLabels(horLines: Int, verLines: Int) {
         horizontalLines = horLines
         verticalLines = verLines
@@ -380,6 +402,93 @@ class ChartViewController: UIViewController {
             currentBottomLables[i].text = candles[max(0, min(candles.count - 1, candleIndex))].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
         }
         currentBottomLables[currentBottomLables.count - 1].text = candles[min(candles.count - 1, startCandle + visibleCount)].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+    }
+    
+    private func findRightMaxMinForMountain() {
+        rightMax = Double(candles.map { $0.High }.max() ?? "0") ?? 0
+        rightMin = Double(candles.map { $0.Low }.min() ?? "0") ?? 0
+        
+        rightMax = rightMax + rightDiff * 0.1
+        rightMin = rightMin - rightDiff * 0.1
+        
+        currentRightLabels[0].text = String(rightMax.roundTo(places: Int(decimalPlaces)))
+        for i in 1..<currentRightLabels.count - 1 {
+            currentRightLabels[i].text = String((rightMax - rightDiff * Double(i) / Double(horizontalLines + 1)).roundTo(places: Int(decimalPlaces)))
+        }
+        currentRightLabels[currentRightLabels.count - 1].text = String(rightMin.roundTo(places: Int(decimalPlaces)))
+    }
+    
+    private func updateTheBottomLabelsForMountainChart() {
+        currentBottomLables[0].text = candles[0].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+        for i in 1..<currentBottomLables.count - 1 {
+            let offset = Int(Double(candles.count) * Double(i) / Double(verticalLines + 1))
+            currentBottomLables[i].text = candles[max(0, min(candles.count - 1, offset))].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+        }
+        currentBottomLables[currentBottomLables.count - 1].text = candles[candles.count - 1].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+    }
+    
+    private func drawTheMountain() {
+        chartUsingRightView.layer.sublayers = []
+        
+        var mountainValue: [Double] = []
+        for (seq, candle) in candles.enumerated() {
+            if seq < 1440 {
+                let open = Double(candle.Open) ?? 0
+                let close = Double(candle.Close) ?? 0
+                mountainValue.append((open + close) / 2)
+            }
+        }
+        
+        drawMountainChartAndTheAvgLine(values: mountainValue)
+    }
+    
+    private func drawMountainChartAndTheAvgLine(values: [Double]) {
+        let mountainLine = UIBezierPath()
+        let mountainLayer = CAShapeLayer()
+        let mountainLastLine = UIBezierPath()
+        let mountainLastLayer = CAShapeLayer()
+        let avgLine = UIBezierPath()
+        let avgLayer = CAShapeLayer()
+        
+        let theFirstValue = convertPosition(system: .Right, value: values[0])
+        mountainLine.move(to: CGPoint(x: 0, y: theFirstValue))
+        avgLine.move(to: CGPoint(x: 0, y: theFirstValue))
+        
+        for i in 1...values.count - 1 {
+            let pt = CGPoint(x: CGFloat(i) * chartUsingRightView.frame.width / 1440, y: convertPosition(system: .Right, value: values[i]))
+            mountainLine.addLine(to: pt)
+            
+            var sum: Double = 0
+            for j in 0...i {
+                sum = sum + values[j]
+            }
+            let avgvalue = sum / (Double(i) + 1)
+            let avgPt = CGPoint(x: CGFloat(i) * chartUsingRightView.frame.width / 1440, y: convertPosition(system: .Right, value: avgvalue))
+            avgLine.addLine(to: avgPt)
+        }
+        mountainLine.addLine(to: CGPoint(x: CGFloat(values.count - 1) * chartUsingRightView.frame.width / 1440, y: chartUsingRightView.frame.height))
+        mountainLine.addLine(to: CGPoint(x: 0.0, y: chartUsingRightView.frame.height))
+        mountainLine.close()
+        
+        mountainLastLine.move(to: CGPoint(x: CGFloat(values.count - 1) * chartUsingRightView.frame.width / 1440, y: convertPosition(system: .Right, value: values.last ?? 0)))
+        mountainLastLine.addLine(to: CGPoint(x: CGFloat(values.count - 1) * chartUsingRightView.frame.width / 1440, y: chartUsingRightView.frame.height))
+        
+        mountainLayer.path = mountainLine.cgPath
+        mountainLayer.lineWidth = 1
+        mountainLayer.strokeColor = UIColor.white.cgColor
+        mountainLayer.fillColor = UIColor.lightGray.cgColor
+        chartUsingRightView.layer.addSublayer(mountainLayer)
+        
+        mountainLastLayer.path = mountainLastLine.cgPath
+        mountainLastLayer.lineWidth = 1
+        mountainLastLayer.strokeColor = UIColor.lightGray.cgColor
+        chartUsingRightView.layer.addSublayer(mountainLastLayer)
+        
+        avgLayer.path = avgLine.cgPath
+        avgLayer.lineWidth = 1
+        avgLayer.strokeColor = UIColor.yellow.cgColor
+        avgLayer.fillColor = UIColor.clear.cgColor
+        chartUsingRightView.layer.addSublayer(avgLayer)
     }
     
     // MARK: 下半部技術圖

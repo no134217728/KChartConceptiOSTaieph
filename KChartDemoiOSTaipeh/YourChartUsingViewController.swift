@@ -17,6 +17,8 @@ class YourChartUsingViewController: UIViewController {
     @IBOutlet weak var macdButton: UIButton!
 
     @IBAction func todaysClicked() {
+        chartViewController?.drawMountain()
+        
         maButton.isHidden = true
         bollButton.isHidden = true
         arbrButton.isHidden = true
