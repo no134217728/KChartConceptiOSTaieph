@@ -410,6 +410,34 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="ZHG-Z3-hdB"/>
                     </view>
+                    <connections>
+                        <outlet property="bottomLabelsView" destination="YQc-zM-aB4" id="831-2a-JJy"/>
+                        <outlet property="chartUsingRightView" destination="sDm-cb-8ak" id="ioC-wv-NTr"/>
+                        <outlet property="chartsScrollView" destination="ut5-xf-RBU" id="n0n-ZJ-SjM"/>
+                        <outlet property="constraintBottomLabelsHeight" destination="i0I-qe-Jwh" id="CrO-3Z-p6g"/>
+                        <outlet property="constraintChartUsingRightWidth" destination="fAy-iF-hpQ" id="Fq3-xp-hG7"/>
+                        <outlet property="constraintLeftLabelsWidth" destination="Hvm-Vs-ESD" id="521-gL-HIx"/>
+                        <outlet property="constraintRightLabelsWidth" destination="qsq-8m-quK" id="r2O-kH-dNO"/>
+                        <outlet property="constraintTechBottomHeight" destination="1gy-Eq-z36" id="4sA-uh-5cw"/>
+                        <outlet property="constraintTechTopHeight" destination="bCX-ia-EYY" id="DaT-ht-cmc"/>
+                        <outlet property="constraintTechUsingRightWidth" destination="OVD-3j-Fip" id="bJU-qz-m9m"/>
+                        <outlet property="constraintTechViewHeight" destination="i4t-xm-CYD" id="cBX-yW-E4q"/>
+                        <outlet property="constraintTopLabelsHeight" destination="YbO-rm-jeb" id="5ab-GP-0yH"/>
+                        <outlet property="currentLineView" destination="9ty-dN-QEs" id="bxY-eg-bN1"/>
+                        <outlet property="currentPriceLabel" destination="PwD-6Z-eJq" id="e8i-px-4RL"/>
+                        <outlet property="gridView" destination="OeF-nP-8yQ" id="fzf-O5-fYd"/>
+                        <outlet property="kLineView" destination="TR9-kz-CS6" id="abs-kz-OVJ"/>
+                        <outlet property="leftLabelsView" destination="bXG-uh-DWG" id="mIO-dA-v7T"/>
+                        <outlet property="rightLabelsView" destination="RiV-r5-VNW" id="ceU-7S-pOl"/>
+                        <outlet property="techBottomLabelsView" destination="Ccu-qK-oUC" id="nHh-rM-556"/>
+                        <outlet property="techGridView" destination="01c-8O-fCO" id="Gtj-O2-z8w"/>
+                        <outlet property="techLeftLabelsView" destination="VEe-5W-iIl" id="lSH-0a-W1w"/>
+                        <outlet property="techRightLabelsView" destination="Sdx-ho-ig5" id="rrB-nQ-7qn"/>
+                        <outlet property="techScrollView" destination="qde-Vv-P48" id="nmU-fN-vbP"/>
+                        <outlet property="techTopLablesView" destination="0rU-De-W1M" id="HSF-Sy-qZA"/>
+                        <outlet property="techView" destination="HDq-LN-MPt" id="ona-YV-HQX"/>
+                        <outlet property="topLabelsView" destination="4Ve-ji-rg2" id="uaX-aB-FBa"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Mzz-Qm-2lM" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <pinchGestureRecognizer id="9Zg-d1-zqu"/>
