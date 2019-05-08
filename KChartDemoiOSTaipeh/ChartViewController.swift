@@ -105,13 +105,13 @@ class ChartViewController: UIViewController {
         drawBasicGridAndSetupBasicRightBottomLabels(horLines: 3, verLines: 2)
         drawTechGridAndSetupTechRightLabels(techHorLines: 2)
         
-//        switch contentOffsetXType {
-//        case .Current:
-//            let x = candleWidth / 2 + Double(startCandle) * candleWidth
-//            chartsScrollView.contentOffset = CGPoint(x: x, y: 0)
-//        case .ToLast:
-//            chartsScrollView.contentOffset = CGPoint(x: constraintChartUsingRightWidth.constant - chartsScrollView.frame.width, y: 0)
-//        }
+        switch contentOffsetXType {
+        case .Current:
+            let x = candleWidth / 2 + Double(startCandle) * candleWidth
+            chartsScrollView.contentOffset = CGPoint(x: x, y: 0)
+        case .ToLast:
+            chartsScrollView.contentOffset = CGPoint(x: constraintChartUsingRightWidth.constant - chartsScrollView.frame.width, y: 0)
+        }
 //
 //        findRightMaxMinAndUpdateTheLabelsThenRedraw()
 //        updateTheBottomLabels()
