@@ -416,6 +416,7 @@
                         <outlet property="chartsScrollView" destination="ut5-xf-RBU" id="n0n-ZJ-SjM"/>
                         <outlet property="constraintBottomLabelsHeight" destination="i0I-qe-Jwh" id="CrO-3Z-p6g"/>
                         <outlet property="constraintChartUsingRightWidth" destination="fAy-iF-hpQ" id="Fq3-xp-hG7"/>
+                        <outlet property="constraintCurrentPriceLineViewTopPosition" destination="9TZ-SW-2MD" id="lKB-uT-6eW"/>
                         <outlet property="constraintLeftLabelsWidth" destination="Hvm-Vs-ESD" id="521-gL-HIx"/>
                         <outlet property="constraintRightLabelsWidth" destination="qsq-8m-quK" id="r2O-kH-dNO"/>
                         <outlet property="constraintTechBottomHeight" destination="1gy-Eq-z36" id="4sA-uh-5cw"/>

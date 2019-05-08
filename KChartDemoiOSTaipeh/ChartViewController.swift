@@ -41,6 +41,8 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var constraintTechUsingRightWidth: NSLayoutConstraint!
     @IBOutlet weak var constraintTechBottomHeight: NSLayoutConstraint!
     
+    @IBOutlet weak var constraintCurrentPriceLineViewTopPosition: NSLayoutConstraint!
+    
     let chartManager = ChartManager()
     var isMountain: Bool = false
     
@@ -61,6 +63,11 @@ class ChartViewController: UIViewController {
                 self.RSIValues = self.chartManager.computeRSI(candles: self.candles)
             }
         }
+    }
+    var theCurrentPrice: Double {
+        let value = Double(candles.last?.Close ?? "0") ?? 0
+        currentPriceLabel.text = String(format: "%.\(decimalPlaces)f", value)
+        return value
     }
     
     var startCandle: Int = 0
@@ -732,6 +739,14 @@ class ChartViewController: UIViewController {
             return 0
         }
     }
+    
+    private func updateCurrentPriceLine(price: Double) {
+        currentLineView.isHidden = !(price < rightMax && price > rightMin) || isMountain
+        
+        let y = convertPosition(system: .Right, value: price)
+        constraintCurrentPriceLineViewTopPosition.constant = y - 8
+        view.layoutIfNeeded()
+    }
 }
 
 extension ChartViewController: UIScrollViewDelegate {
@@ -741,7 +756,7 @@ extension ChartViewController: UIScrollViewDelegate {
         findRightMaxMinAndUpdateTheLabelsThenRedraw()
         drawTech()
         updateTheBottomLabels()
-//        updateCurrentPriceLine(price: theCurrentPrice)
+        updateCurrentPriceLine(price: theCurrentPrice)
         
         switch scrollView {
         case chartsScrollView:
