@@ -22,6 +22,7 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var techTopLablesView: UIView!
     @IBOutlet weak var techLeftLabelsView: UIView!
     @IBOutlet weak var techGridView: UIView!
+    @IBOutlet weak var techUsingRightView: UIView!
     @IBOutlet weak var techScrollView: UIScrollView!
     @IBOutlet weak var techRightLabelsView: UIView!
     @IBOutlet weak var techBottomLabelsView: UIView!
@@ -112,9 +113,9 @@ class ChartViewController: UIViewController {
         case .ToLast:
             chartsScrollView.contentOffset = CGPoint(x: constraintChartUsingRightWidth.constant - chartsScrollView.frame.width, y: 0)
         }
-//
-//        findRightMaxMinAndUpdateTheLabelsThenRedraw()
-//        updateTheBottomLabels()
+
+        findRightMaxMinAndUpdateTheLabelsThenRedraw()
+        updateTheBottomLabels()
 //        drawTech()
     }
     
@@ -215,6 +216,90 @@ class ChartViewController: UIViewController {
         currentBottomLables.append(label)
     }
     
+    private func findRightMaxMinAndUpdateTheLabelsThenRedraw() {
+        if startCandle + visibleCount < candles.count {
+            let visibleCandles = candles[max(0, startCandle)...startCandle + visibleCount]
+            rightMax = Double(visibleCandles.map { $0.High }.max() ?? "0") ?? 0
+            rightMin = Double(visibleCandles.map { $0.Low }.min() ?? "0") ?? 0
+        } else {
+            let visibleCandles = candles[startCandle...(candles.count - 1)]
+            rightMax = Double(visibleCandles.map { $0.High }.max() ?? "0") ?? 0
+            rightMin = Double(visibleCandles.map { $0.Low }.min() ?? "0") ?? 0
+        }
+        
+        rightMax = rightMax + rightDiff * 0.2
+        rightMin = rightMin - rightDiff * 0.2
+        
+        currentRightLabels[0].text = String(format: "%.\(decimalPlaces)f", rightMax.roundTo(places: Int(decimalPlaces)))
+        for i in 1..<currentRightLabels.count - 1 {
+            currentRightLabels[i].text = String(format: "%.\(decimalPlaces)f", (rightMax - rightDiff * Double(i) / Double(horizontalLines + 1)).roundTo(places: Int(decimalPlaces)))
+        }
+        currentRightLabels[currentRightLabels.count - 1].text = String(format: "%.\(decimalPlaces)f", rightMin.roundTo(places: Int(decimalPlaces)))
+        
+        drawTheChartUsingRight()
+    }
+    
+    private func drawTheChartUsingRight() {
+        chartUsingRightView.layer.sublayers = []
+        
+        for i in max(0, startCandle)...min(candles.count - 1, startCandle + visibleCount) {
+            let high = Double(candles[i].High) ?? 0
+            let low = Double(candles[i].Low) ?? 0
+            let open = Double(candles[i].Open) ?? 0
+            let close = Double(candles[i].Close) ?? 0
+            
+            drawACandle(high: high, low: low, open: open, close: close, sequence: i)
+        }
+        
+//        switch selectedKTechType {
+//        case .None:
+//            break
+//        case .MA:
+//            drawKTechUsingRight(values: MAValues)
+//        case .BOLL:
+//            drawKTechUsingRight(values: BOLLValues)
+//        }
+    }
+    
+    private func drawACandle(high: Double, low: Double, open: Double, close: Double, sequence: Int) {
+        let x = CGFloat(Double(sequence) * candleWidth) + CGFloat(candleWidth / 2)
+        let yHigh = convertPosition(system: .Right, value: high)
+        let yLow = convertPosition(system: .Right, value: low)
+        let yOpen = convertPosition(system: .Right, value: open)
+        let yClose = convertPosition(system: .Right, value: close)
+        
+        let strokeColor = (close > open) ? UIColor.green.cgColor : UIColor.red.cgColor
+        
+        let candleHighLowLine = UIBezierPath()
+        let candleHighLowLayer = CAShapeLayer()
+        
+        candleHighLowLine.move(to: CGPoint(x: x, y: yHigh))
+        candleHighLowLine.addLine(to: CGPoint(x: x, y: yLow))
+        candleHighLowLayer.path = candleHighLowLine.cgPath
+        candleHighLowLayer.lineWidth = 1
+        candleHighLowLayer.strokeColor = strokeColor
+        chartUsingRightView.layer.addSublayer(candleHighLowLayer)
+        
+        let candleOpenCloseLine = UIBezierPath()
+        let candleOpenCloseLayer = CAShapeLayer()
+        candleOpenCloseLine.move(to: CGPoint(x: x, y: yOpen))
+        candleOpenCloseLine.addLine(to: CGPoint(x: x, y: yClose))
+        candleOpenCloseLayer.path = candleOpenCloseLine.cgPath
+        candleOpenCloseLayer.lineWidth = CGFloat(candleWidth)
+        candleOpenCloseLayer.strokeColor = strokeColor
+        chartUsingRightView.layer.addSublayer(candleOpenCloseLayer)
+    }
+    
+    private func updateTheBottomLabels() {
+        currentBottomLables[0].text = candles[max(0, startCandle)].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+        for i in 1..<currentBottomLables.count - 1 {
+            let offset = Int(Double(visibleCount) * Double(i) / Double(verticalLines + 1))
+            let candleIndex = startCandle + offset
+            currentBottomLables[i].text = candles[max(0, min(candles.count - 1, candleIndex))].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+        }
+        currentBottomLables[currentBottomLables.count - 1].text = candles[min(candles.count - 1, startCandle + visibleCount)].Time.replacingOccurrences(of: "Z", with: "").replacingOccurrences(of: "T", with: "\n")
+    }
+    
     // MARK: 下半部技術圖
     private func drawTechGridAndSetupTechRightLabels(techHorLines: Int) {
         techHorizontalLines = techHorLines
@@ -280,10 +365,36 @@ class ChartViewController: UIViewController {
             techGridView.layer.addSublayer(gridLineLayer)
         }
     }
+    
+    // MARK: 公用
+    private func convertPosition(system: PositionSystem, value: Double) -> CGFloat {
+        switch system {
+        case .Right:
+            return CGFloat((rightMax - value) / rightDiff) * chartUsingRightView.frame.height
+        case .TechRight:
+            return CGFloat((techRightMax - value) / techRightDiff) * techUsingRightView.frame.height
+        default:
+            return 0
+        }
+    }
 }
 
 extension ChartViewController: UIScrollViewDelegate {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        startCandle = Int(Double(scrollView.contentOffset.x) / candleWidth)
         
+        findRightMaxMinAndUpdateTheLabelsThenRedraw()
+//        drawTech()
+        updateTheBottomLabels()
+//        updateCurrentPriceLine(price: theCurrentPrice)
+        
+        switch scrollView {
+        case chartsScrollView:
+            techScrollView.contentOffset = scrollView.contentOffset
+        case techScrollView:
+            chartsScrollView.contentOffset = scrollView.contentOffset
+        default:
+            break
+        }
     }
 }

@@ -435,6 +435,7 @@
                         <outlet property="techRightLabelsView" destination="Sdx-ho-ig5" id="rrB-nQ-7qn"/>
                         <outlet property="techScrollView" destination="qde-Vv-P48" id="nmU-fN-vbP"/>
                         <outlet property="techTopLablesView" destination="0rU-De-W1M" id="HSF-Sy-qZA"/>
+                        <outlet property="techUsingRightView" destination="bgS-hg-TdG" id="ZZz-iq-JCH"/>
                         <outlet property="techView" destination="HDq-LN-MPt" id="ona-YV-HQX"/>
                         <outlet property="topLabelsView" destination="4Ve-ji-rg2" id="uaX-aB-FBa"/>
                     </connections>
