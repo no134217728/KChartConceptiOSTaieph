@@ -89,6 +89,9 @@
                                 <state key="normal" title="分時">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="todaysClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="GeB-sT-UjB"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="S95-pY-Dav">
                                 <rect key="frame" x="69" y="88" width="69" height="50"/>
@@ -96,6 +99,9 @@
                                 <state key="normal" title="蠟燭">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="candlesClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="e61-xp-6fw"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3lt-sy-n5O">
                                 <rect key="frame" x="138" y="88" width="69" height="50"/>
@@ -103,6 +109,9 @@
                                 <state key="normal" title="MA 上">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="maClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="7Ww-ag-HGI"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DeM-hM-D2p">
                                 <rect key="frame" x="207" y="88" width="69" height="50"/>
@@ -110,6 +119,9 @@
                                 <state key="normal" title="BOLL 上">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="bollClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="BOS-Q8-CTy"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="i7Y-4v-4PA">
                                 <rect key="frame" x="276" y="88" width="69" height="50"/>
@@ -117,6 +129,9 @@
                                 <state key="normal" title="ARBR 下">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="arbrClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="MxE-BZ-j2q"/>
+                                </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="e1g-2R-CoU">
                                 <rect key="frame" x="345" y="88" width="69" height="50"/>
@@ -124,6 +139,9 @@
                                 <state key="normal" title="MACD 下">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 </state>
+                                <connections>
+                                    <action selector="macdClicked" destination="zDf-Q9-Rsg" eventType="touchUpInside" id="Qcf-Ky-HKm"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" red="0.12941176469999999" green="0.12941176469999999" blue="0.12941176469999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -159,6 +177,14 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="cNO-Oh-bTW"/>
                     </view>
+                    <connections>
+                        <outlet property="arbrButton" destination="i7Y-4v-4PA" id="Vus-IF-C1q"/>
+                        <outlet property="bollButton" destination="DeM-hM-D2p" id="hQL-KW-OwD"/>
+                        <outlet property="candlesButton" destination="S95-pY-Dav" id="ZtO-NK-29w"/>
+                        <outlet property="maButton" destination="3lt-sy-n5O" id="s3O-Rf-14D"/>
+                        <outlet property="macdButton" destination="e1g-2R-CoU" id="Yg2-rZ-Ay5"/>
+                        <outlet property="todaysButton" destination="ryi-eX-ZT3" id="vpI-rM-6ZL"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MdR-qF-EJe" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
