@@ -41,8 +41,26 @@ class ChartViewController: UIViewController {
     @IBOutlet weak var constraintTechUsingRightWidth: NSLayoutConstraint!
     @IBOutlet weak var constraintTechBottomHeight: NSLayoutConstraint!
     
+    let chartManager = ChartManager()
+    
     var candleWidth: Double = 5
-    var candles: [CandleItems] = []
+    var candles: [CandleItems] = [] {
+        didSet {
+            DispatchQueue.global(qos: .userInteractive).async {
+                self.MAValues = self.chartManager.computeMA(candles: self.candles)
+                self.BOLLValues = self.chartManager.computeBOLL(candles: self.candles)
+                
+                self.ARBRValues = self.chartManager.computeARBR(candles: self.candles)
+                self.ATRValues = self.chartManager.computeATR(candles: self.candles)
+                self.BIASValues = self.chartManager.computeBIAS(candles: self.candles)
+                self.CCIValues = self.chartManager.computeCCI(candles: self.candles)
+                self.MACDValues = self.chartManager.computeMACD(candles: self.candles)
+                self.KDValues = self.chartManager.computeKD(candles: self.candles)
+                self.KDJValues = self.chartManager.computeKDJ(candles: self.candles)
+                self.RSIValues = self.chartManager.computeRSI(candles: self.candles)
+            }
+        }
+    }
     
     var startCandle: Int = 0
     var visibleCount: Int = 0
@@ -50,6 +68,35 @@ class ChartViewController: UIViewController {
     var dottedLineLength = 5
     var decimalPlaces: UInt8 = 5
     var techDecimalPlaces: UInt8 = 2
+    var selectedKTechType: KTechType = .None
+    var selectedTechType: TechType = .ARBR {
+        didSet {
+            techUnit = ""
+            techDecimalPlaces = 5
+            switch selectedTechType {
+            case .None:
+                break
+            case .ARBR:
+                techDecimalPlaces = 2
+            case .ATR:
+                break
+            case .BIAS:
+                techUnit = "%"
+                techDecimalPlaces = 2
+            case .CCI:
+                techDecimalPlaces = 2
+            case .MACD:
+                break
+            case .KD:
+                techDecimalPlaces = 2
+            case .KDJ:
+                techDecimalPlaces = 2
+            case .RSI:
+                techDecimalPlaces = 2
+            }
+        }
+    }
+    var techUnit: String = ""
     
     var horizontalLines = 0
     var techHorizontalLines = 0
@@ -69,6 +116,18 @@ class ChartViewController: UIViewController {
     var techRightDiff: Double {
         return techRightMax - techRightMin
     }
+    
+    var MAValues: [String: [Double]] = [:]
+    var BOLLValues: [String: [Double]] = [:]
+    
+    var ARBRValues: [String: [Double]] = [:]
+    var ATRValues: [String: [Double]] = [:]
+    var BIASValues: [String: [Double]] = [:]
+    var CCIValues: [String: [Double]] = [:]
+    var MACDValues: [String: [Double]] = [:]
+    var KDValues: [String: [Double]] = [:]
+    var KDJValues: [String: [Double]] = [:]
+    var RSIValues: [String: [Double]] = [:]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,7 +175,30 @@ class ChartViewController: UIViewController {
 
         findRightMaxMinAndUpdateTheLabelsThenRedraw()
         updateTheBottomLabels()
-//        drawTech()
+        drawTech()
+    }
+    
+    func drawTech() {
+        switch selectedTechType {
+        case .None:
+            break
+        case .ARBR:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: ARBRValues)
+        case .ATR:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: ATRValues)
+        case .BIAS:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: BIASValues)
+        case .CCI:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: CCIValues)
+        case .MACD:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: MACDValues)
+        case .KD:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: KDValues)
+        case .KDJ:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: KDJValues)
+        case .RSI:
+            findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: RSIValues)
+        }
     }
     
     private func drawBasicGridAndSetupBasicRightBottomLabels(horLines: Int, verLines: Int) {
@@ -366,6 +448,127 @@ class ChartViewController: UIViewController {
         }
     }
     
+    private func findTechRightMaxMinAndUpdateTheLabelsThenRedraw(values: [String: [Double]]) {
+        var theMaxs: [Double] = []
+        var theMins: [Double] = []
+        let keys = values.keys
+        
+        for key in keys {
+            let items: [Double] = values[key] ?? []
+            var itemMax: Double = 0
+            var itemMin: Double = 0
+            var itemDiff: Double {
+                return itemMax - itemMin
+            }
+            
+            var visibleItems: ArraySlice<Double> = []
+            if startCandle + visibleCount < candles.count {
+                visibleItems = items[max(0, startCandle)...(startCandle + visibleCount)]
+            } else {
+                visibleItems = items[startCandle...(candles.count - 1)]
+            }
+            itemMax = visibleItems.max() ?? 0
+            itemMin = visibleItems.min() ?? 0
+            
+            itemMax = itemMax + itemDiff * 0.1
+            itemMin = itemMin - itemDiff * 0.1
+            
+            theMaxs.append(itemMax)
+            theMins.append(itemMin)
+        }
+        
+        techRightMax = theMaxs.max() ?? 0
+        techRightMin = theMins.min() ?? 0
+        
+        currentTechRightLabels[0].text = "\(String(format: "%.\(techDecimalPlaces)f", techRightMax.roundTo(places: Int(techDecimalPlaces)))) \(techUnit)"
+        for i in 1..<currentTechRightLabels.count - 1 {
+            currentTechRightLabels[i].text = "\(String(format: "%.\(techDecimalPlaces)f", (techRightMax - techRightDiff * Double(i) / Double(techHorizontalLines + 1)).roundTo(places: Int(techDecimalPlaces)))) \(techUnit)"
+        }
+        currentTechRightLabels[currentTechRightLabels.count - 1].text = "\(String(format: "%.\(techDecimalPlaces)f", techRightMin.roundTo(places: Int(techDecimalPlaces)))) \(techUnit)"
+        
+        drawTheTechUsingRight(values: values)
+    }
+    
+    private func drawTheTechUsingRight(values: [String: [Double]]) {
+        techUsingRightView.layer.sublayers = []
+        let keys = values.keys
+        
+        for key in keys {
+            let techLine = UIBezierPath()
+            let techLineLayer = CAShapeLayer()
+            if key == "OSC" { // MACD 的註狀圖
+                if let selected = values["OSC"], selected.count > 0 {
+                    for i in max(0, startCandle)...min(candles.count - 1, startCandle + visibleCount) {
+                        drawAMACDBarForTech(start: selected[i], sequence: i)
+                    }
+                }
+            } else {
+                var strokeColor: CGColor { // TODO: 暫時隨便設定，最後移至全域
+                    switch key {
+                    case "AR":
+                        return UIColor.yellow.cgColor
+                    case "BR":
+                        return UIColor.blue.cgColor
+                    case "DIF":
+                        return UIColor.yellow.cgColor
+                    case "MACD":
+                        return UIColor.white.cgColor
+                    case "CCI":
+                        return UIColor.yellow.cgColor
+                    case "K":
+                        return UIColor.blue.cgColor
+                    case "D":
+                        return UIColor.green.cgColor
+                    case "J":
+                        return UIColor.red.cgColor
+                    case "RSI5":
+                        return UIColor.blue.cgColor
+                    case "RSI14":
+                        return UIColor.green.cgColor
+                    case "RSI21":
+                        return UIColor.red.cgColor
+                    default:
+                        return UIColor.lightGray.cgColor
+                    }
+                }
+                
+                if let selected = values[key], selected.count > 0 {
+                    let firstValue = convertPosition(system: .TechRight, value: selected[max(0, startCandle)])
+                    techLine.move(to: CGPoint(x: CGFloat(candleWidth / 2), y: firstValue))
+                    for i in max(1, startCandle)...min(candles.count - 1, startCandle + visibleCount) {
+                        let x = CGFloat(Double(i) * candleWidth) + CGFloat(candleWidth / 2)
+                        let theValue = convertPosition(system: .TechRight, value: selected[i])
+                        techLine.addLine(to: CGPoint(x: x, y: theValue))
+                    }
+                    
+                    techLineLayer.path = techLine.cgPath
+                    techLineLayer.lineWidth = 1
+                    techLineLayer.strokeColor = strokeColor
+                    techLineLayer.fillColor = UIColor.clear.cgColor
+                    techUsingRightView.layer.addSublayer(techLineLayer)
+                }
+            }
+        }
+    }
+    
+    private func drawAMACDBarForTech(start: Double, sequence: Int) {
+        let x = CGFloat(Double(sequence) * candleWidth) + CGFloat(candleWidth / 2)
+        let yStart = convertPosition(system: .TechRight, value: start)
+        let yEnd = convertPosition(system: .TechRight, value: 0)
+        
+        let strokeColor = (start > 0) ? UIColor.green.cgColor : UIColor.red.cgColor
+        
+        let barLine = UIBezierPath()
+        let barLayer = CAShapeLayer()
+        
+        barLine.move(to: CGPoint(x: x, y: yStart))
+        barLine.addLine(to: CGPoint(x: x, y: yEnd))
+        barLayer.path = barLine.cgPath
+        barLayer.lineWidth = CGFloat(candleWidth - 1)
+        barLayer.strokeColor = strokeColor
+        techUsingRightView.layer.addSublayer(barLayer)
+    }
+    
     // MARK: 公用
     private func convertPosition(system: PositionSystem, value: Double) -> CGFloat {
         switch system {
@@ -384,7 +587,7 @@ extension ChartViewController: UIScrollViewDelegate {
         startCandle = Int(Double(scrollView.contentOffset.x) / candleWidth)
         
         findRightMaxMinAndUpdateTheLabelsThenRedraw()
-//        drawTech()
+        drawTech()
         updateTheBottomLabels()
 //        updateCurrentPriceLine(price: theCurrentPrice)
         

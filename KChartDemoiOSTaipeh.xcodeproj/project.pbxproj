@@ -17,6 +17,7 @@
 		20F5360922826A62005F796E /* YourChartUsingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5360822826A62005F796E /* YourChartUsingViewController.swift */; };
 		20F5360B22826A86005F796E /* ChartViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5360A22826A86005F796E /* ChartViewController.swift */; };
 		20F5360D22826B2B005F796E /* YourMarketsListsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5360C22826B2B005F796E /* YourMarketsListsViewController.swift */; };
+		20F5360F2282801B005F796E /* ChartManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20F5360E2282801B005F796E /* ChartManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +33,7 @@
 		20F5360822826A62005F796E /* YourChartUsingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourChartUsingViewController.swift; sourceTree = "<group>"; };
 		20F5360A22826A86005F796E /* ChartViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartViewController.swift; sourceTree = "<group>"; };
 		20F5360C22826B2B005F796E /* YourMarketsListsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YourMarketsListsViewController.swift; sourceTree = "<group>"; };
+		20F5360E2282801B005F796E /* ChartManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChartManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,6 +71,7 @@
 				20F5360C22826B2B005F796E /* YourMarketsListsViewController.swift */,
 				20F5360822826A62005F796E /* YourChartUsingViewController.swift */,
 				20F5360A22826A86005F796E /* ChartViewController.swift */,
+				20F5360E2282801B005F796E /* ChartManager.swift */,
 				20F535F122826821005F796E /* Main.storyboard */,
 				20F535F422826823005F796E /* Assets.xcassets */,
 				20F535F622826823005F796E /* LaunchScreen.storyboard */,
@@ -162,6 +165,7 @@
 			files = (
 				20F535EE22826821005F796E /* AppDelegate.swift in Sources */,
 				20F5360422826892005F796E /* STARCandlesModel.swift in Sources */,
+				20F5360F2282801B005F796E /* ChartManager.swift in Sources */,
 				20F5360922826A62005F796E /* YourChartUsingViewController.swift in Sources */,
 				20F5360D22826B2B005F796E /* YourMarketsListsViewController.swift in Sources */,
 				20F5360B22826A86005F796E /* ChartViewController.swift in Sources */,
